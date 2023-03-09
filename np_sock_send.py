@@ -1,13 +1,6 @@
 
 
-
-
-
-
-
-# First import the library
 import pyrealsense2 as rs
-# Import Numpy for easy array manipulation
 import numpy as np
 
 from numpysocket import NumpySocket
@@ -17,8 +10,8 @@ FRAME_WIDTH = 640
 FRAME_HEIGHT = 480
 FPS = 30
 
-HOST = socket.gethostname()  # as both code is running on same pc
-PORT = 5000  # socket server port number
+HOST = socket.gethostname() 
+PORT = 5000 
 
 
 
