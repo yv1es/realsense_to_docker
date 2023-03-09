@@ -9,14 +9,17 @@ FRAME_HEIGHT = 480
 FPS = 30
 
 HOST = socket.gethostname() 
-PORT = 5000 
+PORT_C = 5000 
+PORT_D = 5001
 
 
-def setup_socket():
-     
-    socket = NumpySocket()  # instantiate
-    socket.connect((HOST, PORT))  # connect to the server
-    return socket 
+def setup_sockets():
+    socket_c = NumpySocket()  # instantiate
+    socket_c.connect((HOST, PORT_C))  # connect to the server
+
+    socket_d = NumpySocket()  # instantiate
+    socket_d.connect((HOST, PORT_D))  # connect to the server
+    return socket_c, socket_d
 
 
 def setup_realsense():
@@ -49,15 +52,18 @@ def setup_realsense():
 
 
 def main():
+
+    print("Setting up RealSense")
     pipeline = setup_realsense()
-    socket = setup_socket()
+
+    print("Connecting to receiver")
+    socket_c, socket_d = setup_sockets()
     
     # setup aligner
     align_to = rs.stream.color
     aligner = rs.align(align_to)
 
-    print("Connected")
-
+    print("Connected, starting stream")
     try:
         while True:
             # Get frameset of color and depth
@@ -78,11 +84,12 @@ def main():
             depth_image = np.asanyarray(aligned_depth_frame.get_data())
             color_image = np.asanyarray(color_frame.get_data())
 
-            socket.sendall(color_image)
-            print("Sent image")
+            socket_c.sendall(color_image)
+            socket_d.sendall(depth_image)
 
     finally:
-        socket.close()
+        socket_c.close()
+        socket_d.close()
         pipeline.stop()
         print("Disconnected")
 
