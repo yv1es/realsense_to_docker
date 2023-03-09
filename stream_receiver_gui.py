@@ -45,7 +45,7 @@ def main():
         if np.size(color) == 0 or np.size(depth) == 0:
             break
         
-        cv2.imshow('Example', color)
+        cv2.imshow('Color', color)
         key = cv2.waitKey(1)
         # Press esc or 'q' to close the image window
         if key & 0xFF == ord('q') or key == 27:
